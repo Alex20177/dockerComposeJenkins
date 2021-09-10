@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  jenkins:
+    image: 'jenkinsci/blueocean:latest'
+    ports:
+      - '8080:8080'
+      - '8443:8443'
+    volumes:
+      - 'jenkins_data:/var/jenkins_home'
+      - './:/app:rw'
+    environment:
+      - 'JENKINS_OPTS=--httpPort=8080 --httpsPort=8443'
+volumes:
+  jenkins_data:
+    driver: local
+
+#******DOCKER-COMPOSE COMMANDS******
+#docker-compose up -d
+#docker-compose down
+#docker-compose ps
+#docker-compose restart
+#docker-compose logs jenkins
+
+#******OPEN SH TERMINAL*********
+# 1) docker-compose ps, then get the container name (ex. jenkins-docker-compose_jenkins1)
+# 2) docker exec -ti jenkins-docker-compose_jenkins_1 /bin/bash
