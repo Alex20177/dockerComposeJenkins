@@ -4,13 +4,26 @@ services:
   jenkins:
     image: 'jenkinsci/blueocean:latest'
     ports:
-      - '8080:8080'
+      - '9292:8080'
       - '8443:8443'
     volumes:
       - 'jenkins_data:/var/jenkins_home'
       - './:/app:rw'
     environment:
       - 'JENKINS_OPTS=--httpPort=8080 --httpsPort=8443'
+  
+  jboss:
+    image: 'jboss/wildfly:latest'   
+    volumes:
+      - '~/deployments:/opt/jboss/wildfly/standalone/deployments'
+    ports:
+      - '8080:8080'
+      - '9990:9990'
+      - '8000:8000'
+    command: >
+         bash -c "/opt/jboss/wildfly/bin/add-user.sh jboss jboss --silent
+         && /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0"   
+
 volumes:
   jenkins_data:
     driver: local
@@ -25,3 +38,13 @@ volumes:
 #******OPEN SH TERMINAL*********
 # 1) docker-compose ps, then get the container name (ex. jenkins-docker-compose_jenkins1)
 # 2) docker exec -ti jenkins-docker-compose_jenkins_1 /bin/bash
+
+#*******JENKINS LINTER FOR VALIDATE JENKINSFILES******
+
+#******CREDENTIALS-JENKINS*************
+#jenkins/jenkins
+#******CREDENTIALS-JBOSS***************
+#jboss/jboss
+
+#****DOCKER-LINKS******
+#https://stackoverflow.com/questions/57183936/webfly-adding-admin-user-via-docker-compose
